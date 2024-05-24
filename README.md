@@ -19,6 +19,13 @@ The protein is then visualized through a complex interaction leveraging _biopand
 
 Finally, the _graphein_ plot is written to an HTML file, where the interactive 3D model is stored: this file is available for download and you can explore and play with it!
 
+<div align="center">
+<video width="320" height="240" controls>
+  <source src="./imgs/example_play.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+</div>
+
 Everything is easily rendered through a Gradio interface.
 
 ### How can I reproduce it on my computer?
