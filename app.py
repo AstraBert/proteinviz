@@ -4,7 +4,6 @@ from transformers.models.esm.openfold_utils.feats import atom14_to_atom37
 from proteins_viz import *
 import gradio as gr
 
-
 def convert_outputs_to_pdb(outputs):
     final_atom_positions = atom14_to_atom37(outputs["positions"][-1], outputs)
     outputs = {k: v.to("cpu").numpy() for k, v in outputs.items()}
@@ -40,7 +39,6 @@ torch.backends.cuda.matmul.allow_tf32 = True
 
 model.trunk.set_chunk_size(64)
 
-
 def fold_protein(test_protein):
     tokenized_input = tokenizer([test_protein], return_tensors="pt", add_special_tokens=False)['input_ids']
     tokenized_input = tokenized_input.cuda()
@@ -58,10 +56,10 @@ iface = gr.Interface(
     inputs=gr.Textbox(
             label="Protein Sequence",
             info="Find sequences examples below, and complete examples with images at: https://github.com/AstraBert/proteinviz/tree/main/examples.md; if you input a sequence, you're gonna get the static image and the HTML file with the 3D model to explore and play with",
-            lines=50,
+            lines=5,
             value=f"Paste or write amino-acidic sequence here",
         ),
-    outputs="image", 
+    outputs=[gr.Image(label="Protein static image"), gr.File(label="Protein 3D model HTML")], 
     examples=[
         "MVHLTPEEKSAVTALWGKVNVDEVGGEALGRLLVVYPWTQRFFESFGDLSTPDAVMGNPKVKAHGKKVLGAFSDGLAHLDNLKGTFATLSELHCDKLHVDPENFRLLGNVLVCVLAHHFGKEFTPPVQAAYQKVVAGVANALAHKYH",
         "MTEYKLVVVGAGGVGKSALTIQLIQNHFVDEYDPTIEDSYRKQVVIDGETCLLDILDTAGQEEYSAMRDQYMRTGEGFLCVFAINNTKSFEDIHQYREQIKRVKDSDDVPMVLVGNKCDLAARTVESRQAQDLARSYGIPYIETSAKTRQGVEDAFYTLVREIRQHKLRKLNPPDESGPGCMSCKCVLS",
