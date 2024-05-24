@@ -17,6 +17,8 @@ The model predicts the positions of the amino-acids and its predictions get turn
 
 The protein is then visualized through a complex interaction leveraging _biopandas_ (to read the PDB file), _plotly_ and _graphein_ to actually build the image (which is indeed a backbone structure representation) and _PIL_ to show it.
 
+Finally, the _graphein_ plot is written to an HTML file, where the interactive 3D model is stored: this file is available for download and you can explore and play with it!
+
 Everything is easily rendered through a Gradio interface.
 
 ### How can I reproduce it on my computer?
