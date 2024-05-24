@@ -132,4 +132,6 @@ def take_care(pdb_path):
     # Load the PNG image into a PIL image
     image = Image.open(image_file)
 
-    return image
+    p.write_html("protein.html")    
+    
+    return image, "protein.html"

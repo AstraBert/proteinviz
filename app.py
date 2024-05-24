@@ -55,8 +55,18 @@ def fold_protein(test_protein):
 iface = gr.Interface(
     title="everything-ai-proteinfold",
     fn=fold_protein,
-    inputs="text",
+    inputs=gr.Textbox(
+            label="Protein Sequence",
+            info="Find sequences examples below, and complete examples with images at: https://github.com/AstraBert/proteinviz/tree/main/examples.md; if you input a sequence, you're gonna get the static image and the HTML file with the 3D model to explore and play with",
+            lines=50,
+            value=f"Paste or write amino-acidic sequence here",
+        ),
     outputs="image", 
+    examples=[
+        "MVHLTPEEKSAVTALWGKVNVDEVGGEALGRLLVVYPWTQRFFESFGDLSTPDAVMGNPKVKAHGKKVLGAFSDGLAHLDNLKGTFATLSELHCDKLHVDPENFRLLGNVLVCVLAHHFGKEFTPPVQAAYQKVVAGVANALAHKYH",
+        "MTEYKLVVVGAGGVGKSALTIQLIQNHFVDEYDPTIEDSYRKQVVIDGETCLLDILDTAGQEEYSAMRDQYMRTGEGFLCVFAINNTKSFEDIHQYREQIKRVKDSDDVPMVLVGNKCDLAARTVESRQAQDLARSYGIPYIETSAKTRQGVEDAFYTLVREIRQHKLRKLNPPDESGPGCMSCKCVLS",
+        "MQIFVKTLTGKTITLEVEPSDTIENVKAKIQDKEGIPPDQQRLIFAGKQLEDGRTLSDYNIQKESTLHLVLRLRGG",
+    ]
 )
 
 iface.launch(server_name="0.0.0.0", share=False)
