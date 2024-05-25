@@ -53,3 +53,7 @@ The hereby presented software is open-source and distributed under MIT license.
 
 As stated before, the project was developed for research purposes and must be used only in this sense.
 
+### Citations
+
+- Rego N, Koes D. 3Dmol.js: molecular visualization with WebGL. Bioinformatics. 2015;31(8):1322-1324. doi:10.1093/bioinformatics/btu829
+
