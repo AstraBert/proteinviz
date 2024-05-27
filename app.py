@@ -1,8 +1,22 @@
 from transformers import AutoTokenizer, EsmForProteinFolding
 from transformers.models.esm.openfold_utils.protein import to_pdb, Protein as OFProtein
 from transformers.models.esm.openfold_utils.feats import atom14_to_atom37
-from proteins_viz import *
 import gradio as gr
+from gradio_molecule3d import Molecule3D
+
+reps =    [
+    {
+      "model": 0,
+      "chain": "",
+      "resname": "",
+      "style": "stick",
+      "color": "whiteCarbon",
+      "residue_range": "",
+      "around": 0,
+      "byres": False,
+      "visible": False
+    }
+]
 
 def read_mol(molpath):
     with open(molpath, "r") as fp:
@@ -110,9 +124,8 @@ def fold_protein(test_protein):
     pdb = convert_outputs_to_pdb(output)
     with open("output_structure.pdb", "w") as f:
         f.write("".join(pdb))
-    image = take_care("output_structure.pdb")
     html = molecule("output_structure.pdb")
-    return image, html
+    return html, "output_structure.pdb"
 
 iface = gr.Interface(
     title="everything-ai-proteinfold",
@@ -123,7 +136,7 @@ iface = gr.Interface(
             lines=5,
             value=f"Paste or write amino-acidic sequence here",
         ),
-    outputs=[gr.Image(label="Protein static image"), gr.HTML(label="Protein 3D model")], 
+    outputs=[gr.HTML(label="Protein 3D model"), Molecule3D(label="Molecular 3D model", reps=reps)], 
     examples=[
         "MVHLTPEEKSAVTALWGKVNVDEVGGEALGRLLVVYPWTQRFFESFGDLSTPDAVMGNPKVKAHGKKVLGAFSDGLAHLDNLKGTFATLSELHCDKLHVDPENFRLLGNVLVCVLAHHFGKEFTPPVQAAYQKVVAGVANALAHKYH",
         "MTEYKLVVVGAGGVGKSALTIQLIQNHFVDEYDPTIEDSYRKQVVIDGETCLLDILDTAGQEEYSAMRDQYMRTGEGFLCVFAINNTKSFEDIHQYREQIKRVKDSDDVPMVLVGNKCDLAARTVESRQAQDLARSYGIPYIETSAKTRQGVEDAFYTLVREIRQHKLRKLNPPDESGPGCMSCKCVLS",

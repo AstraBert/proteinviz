@@ -15,9 +15,7 @@ It does this by exploiting [facebook/esmfold_v1](https://huggingface.co/facebook
 
 The model predicts the positions of the amino-acids and its predictions get turned into a PDB file (Protein DataBase format). This file contains lots of stereochemical and positional metadata related to amino-acids and their atoms, instructing visualization servers on how the protein should be represented.
 
-The protein is then visualized through a complex interaction leveraging _biopandas_ (to read the PDB file), _plotly_ and _graphein_ to actually build the image (which is indeed a backbone structure representation) and _PIL_ to show it.
-
-Finally, the 3D representation of the molecule is written to an HTML object that gets displayed on your browser, directly.
+The protein is then visualized at an amino-acidic level thanks to [gradio_molecule3d](https://pypi.org/project/gradio-molecule3d/) component by [Simon Dürr](https://simonduerr.eu/). The tertiary structure 3D representation of the molecule is instead written to an HTML object that gets displayed on your browser, directly. Both these things are accomplished thanks to 3Dmol.js (more at [Citations](#citations))
 
 ![example_play](./imgs/example_play.gif)
 
