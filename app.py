@@ -3,7 +3,6 @@ from transformers.models.esm.openfold_utils.protein import to_pdb, Protein as OF
 from transformers.models.esm.openfold_utils.feats import atom14_to_atom37
 from Bio import SeqIO
 import gradio as gr
-import spaces
 from gradio_molecule3d import Molecule3D
 
 reps =    [
@@ -118,7 +117,6 @@ torch.backends.cuda.matmul.allow_tf32 = True
 
 model.trunk.set_chunk_size(64)
 
-@spaces.GPU(duration=120)
 def fold_protein(test_protein):
     tokenized_input = tokenizer([test_protein], return_tensors="pt", add_special_tokens=False)['input_ids']
     tokenized_input = tokenized_input.cuda()
@@ -130,7 +128,6 @@ def fold_protein(test_protein):
     html = molecule("output_structure.pdb")
     return html, "output_structure.pdb"
 
-@spaces.GPU(duration=180)
 def fold_protein_wpdb(test_protein, pdb_path):
     tokenized_input = tokenizer([test_protein], return_tensors="pt", add_special_tokens=False)['input_ids']
     tokenized_input = tokenized_input.cuda()
@@ -192,4 +189,4 @@ demo1 = gr.Interface(
 
 demo = gr.TabbedInterface([iface, demo1], ["Single Protein Structure Prediction", "Bulk Protein Structure Prediction"])
 
-demo.launch()
+demo.launch(server_name="0.0.0.0", server_port=7860)
