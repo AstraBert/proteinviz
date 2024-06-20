@@ -16,3 +16,7 @@ Displayed static PNG image and let you visualize 3D model of the tertiary struct
 
 - Removed support for Graphein protein backbone visualization (no more Graphein, Plotly, Biopandas needed)
 - Added support for on-browser 3D molecular level rendering of the protein
+
+## v2.0.0
+
+- Added **BulkProteinviz** with `gr.TabbedInterface()`
