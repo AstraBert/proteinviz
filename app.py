@@ -1,7 +1,9 @@
 from transformers import AutoTokenizer, EsmForProteinFolding
 from transformers.models.esm.openfold_utils.protein import to_pdb, Protein as OFProtein
 from transformers.models.esm.openfold_utils.feats import atom14_to_atom37
+from Bio import SeqIO
 import gradio as gr
+import spaces
 from gradio_molecule3d import Molecule3D
 
 reps =    [
@@ -116,6 +118,7 @@ torch.backends.cuda.matmul.allow_tf32 = True
 
 model.trunk.set_chunk_size(64)
 
+@spaces.GPU(duration=120)
 def fold_protein(test_protein):
     tokenized_input = tokenizer([test_protein], return_tensors="pt", add_special_tokens=False)['input_ids']
     tokenized_input = tokenized_input.cuda()
@@ -127,8 +130,40 @@ def fold_protein(test_protein):
     html = molecule("output_structure.pdb")
     return html, "output_structure.pdb"
 
+@spaces.GPU(duration=180)
+def fold_protein_wpdb(test_protein, pdb_path):
+    tokenized_input = tokenizer([test_protein], return_tensors="pt", add_special_tokens=False)['input_ids']
+    tokenized_input = tokenized_input.cuda()
+    with torch.no_grad():
+        output = model(tokenized_input)
+    pdb = convert_outputs_to_pdb(output)
+    with open(pdb_path, "w") as f:
+        f.write("".join(pdb))
+    html = molecule(pdb_path)
+    return html
+
+def load_protein_sequences(fasta_file):
+    protein_sequences = {} 
+    for record in SeqIO.parse(fasta_file, "fasta"):
+        protein_sequences[record.id] = str(record.seq)
+    return protein_sequences
+
+def show_split(inputfile):
+    seqs = load_protein_sequences(inputfile)
+    htmls = []
+    for seq in seqs:
+        pdb_path = f'{seq.replace(" ", "_").replace(",","")}.pdb'
+        html = fold_protein_wpdb(seqs[seq], pdb_path)
+        x = f"""<h3>>{seq}</h3>
+        <br>
+        """
+        htmls.append(x+html)
+    final = "\n<br>\n".join(htmls)
+    realhtml = "<div>\n"+final+"\n</div>"
+    return realhtml
+
 iface = gr.Interface(
-    title="everything-ai-proteinfold",
+    title="SingleProteinviz",
     fn=fold_protein,
     inputs=gr.Textbox(
             label="Protein Sequence",
@@ -144,4 +179,17 @@ iface = gr.Interface(
     ]
 )
 
-iface.launch(server_name="0.0.0.0", share=False)
+demo1 = gr.Interface(
+    title="BulkProteinviz",
+    fn=show_split,
+    inputs=gr.File(
+            label="FASTA File With Protein Sequences",
+        ),
+    outputs= gr.HTML(label="Protein 3D models"),
+    examples = ["proteins.fasta"]
+)
+
+
+demo = gr.TabbedInterface([iface, demo1], ["Single Protein Structure Prediction", "Bulk Protein Structure Prediction"])
+
+demo.launch()
