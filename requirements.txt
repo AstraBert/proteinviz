@@ -1,4 +1,3 @@
-spaces==0.28.3
 gradio_molecule3d==0.0.5
 gradio
 accelerate==0.30.1
